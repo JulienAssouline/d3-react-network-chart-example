@@ -1,24 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import json from "./data.json";
+import ForceChart from "./ForceChart";
+import { hierarchy } from "d3-hierarchy";
 
 function App() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    setData(json);
+  }, []);
+
+  if (data.lenth === 0) return <div>loading...</div>;
+
+  const root = hierarchy(data);
+
+  const nodes = flatten(root);
+  const links = root.links();
+
+  function flatten(root) {
+    var nodes = [],
+      i = 0;
+
+    function recurse(node) {
+      if (node.children) node.children.forEach(recurse);
+      if (!node.id) node.id = ++i;
+      else ++i;
+      nodes.push(node);
+    }
+    recurse(root);
+    return nodes;
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ForceChart nodes={nodes} links={links} />
     </div>
   );
 }
