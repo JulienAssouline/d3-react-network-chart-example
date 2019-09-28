@@ -1,1 +1,1 @@
-![alt text](network-chart.png)
+![alt text](network-chart-2.png)
