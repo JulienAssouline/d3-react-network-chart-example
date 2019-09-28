@@ -1,5 +1,5 @@
 import React from "react";
-import { w, h, width, height, margin } from "./utils/chart_utils";
+import { w, h, margin } from "./utils/chart_utils";
 import {
   forceSimulation,
   forceLink,
@@ -45,12 +45,20 @@ function ForceChart(props) {
     <g
       key={i}
       className="node"
-      style={{ stroke: "#666", fill: "red" }}
+      style={{ stroke: "#666", fill: color(d) }}
       transform={`translate(${d.x}, ${d.y})`}
     >
       <circle r={Math.sqrt(d.data.size) / 10 || 4.5} />
     </g>
   ));
+
+  function color(d) {
+    return d._children
+      ? "#3182bd" // collapsed package
+      : d.children
+      ? "#c6dbef" // expanded package
+      : "red"; // leaf node
+  }
 
   return (
     <div className="chart">
